@@ -28,9 +28,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn({ onSubmit }) {
+export default function SignIn({ handleConfig }) {
   const classes = useStyles();
   const history = useHistory();
+  
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -42,7 +43,7 @@ export default function SignIn({ onSubmit }) {
           className={classes.form}
           onSubmit={e => {
             e.preventDefault();
-            onSubmit({
+            handleConfig({
               userId: e.target.userId.value,
               nickname: e.target.nickname.value,
               theme: e.target.theme.checked ? 'dark' : 'light',

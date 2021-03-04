@@ -12,6 +12,7 @@ import Chat from './Chat/Index';
 
 function App() {
   const [config, setconfig] = useState({});
+  
   return (
     <div className="App">
       <Router>
@@ -25,7 +26,7 @@ function App() {
             />
           </Route>
           <Route path="/">
-            <Login onSubmit={setconfig} />
+            <Login handleConfig={setconfig} />
           </Route>
         </Switch>
       </Router>
