@@ -11,6 +11,7 @@ import { OpenChannelCreateModal } from './components/OpenChannelCreateModal';
 const openChannelBtn = document.querySelector('#open_chat');
 const openChannelCreateBtn = document.querySelector('#open_chat_add');
 const groupChannelCreateBtn = document.querySelector('#group_chat_add');
+const channelFindBtn = document.getElementById('channel_find_button');
 
 let instance = null;
 
@@ -49,6 +50,17 @@ class ChatLeftMenu {
 
     groupChannelCreateBtn.addEventListener('click', () => {
       UserList.getInstance().render();
+    });
+
+    channelFindBtn.addEventListener('click', () => {
+      const channelUrl = prompt('input the Channel Url');
+      if (channelUrl) {
+        SendBirdAction.getInstance()
+          .getChannel(channelUrl, false)
+          .then((channel) => {
+            ChatLeftMenu.getInstance().activeChannelItem(channel.url);
+          });
+      }
     });
   }
 
@@ -153,6 +165,7 @@ class ChatLeftMenu {
    * Group Channel
    */
   getGroupChannelList(isInit = false) {
+    console.log('get list!.....');
     Spinner.start(body);
     SendBirdAction.getInstance()
       .getGroupChannelList(isInit)

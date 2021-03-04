@@ -1,10 +1,6 @@
 import SendBird from 'sendbird';
-import {
-  APP_ID as appId
-} from './const';
-import {
-  isNull
-} from './utils';
+import { APP_ID as appId } from './const';
+import { isNull } from './utils';
 
 let instance = null;
 
@@ -31,18 +27,15 @@ class SendBirdAction {
   connect(userId, nickname) {
     return new Promise((resolve, reject) => {
       const sb = SendBird.getInstance();
-      sb.connect(
-        userId,
-        (user, error) => {
-          if (error) {
-            reject(error);
-          } else {
-            sb.updateCurrentUserInfo(decodeURIComponent(nickname), null, (user, error) => {
-              error ? reject(error) : resolve(user);
-            });
-          }
+      sb.connect(userId, (user, error) => {
+        if (error) {
+          reject(error);
+        } else {
+          sb.updateCurrentUserInfo(decodeURIComponent(nickname), null, (user, error) => {
+            error ? reject(error) : resolve(user);
+          });
         }
-      );
+      });
     });
   }
 
@@ -151,13 +144,12 @@ class SendBirdAction {
   createOpenChannel(channelName) {
     return new Promise((resolve, reject) => {
       channelName
-        ?
-        this.sb.OpenChannel.createChannel(channelName, null, null, (openChannel, error) => {
-          error ? reject(error) : resolve(openChannel);
-        }) :
-        this.sb.OpenChannel.createChannel((openChannel, error) => {
-          error ? reject(error) : resolve(openChannel);
-        });
+        ? this.sb.OpenChannel.createChannel(channelName, null, null, (openChannel, error) => {
+            error ? reject(error) : resolve(openChannel);
+          })
+        : this.sb.OpenChannel.createChannel((openChannel, error) => {
+            error ? reject(error) : resolve(openChannel);
+          });
     });
   }
 
@@ -217,7 +209,7 @@ class SendBirdAction {
   getGroupChannelList(isInit = false) {
     if (isInit || isNull(this.groupChannelQuery)) {
       this.groupChannelQuery = this.sb.GroupChannel.createMyGroupChannelListQuery();
-      this.groupChannelQuery.limit = 50;
+      this.groupChannelQuery.limit = 100;
       this.groupChannelQuery.includeEmpty = false;
       this.groupChannelQuery.order = 'latest_last_message';
     }
@@ -235,6 +227,8 @@ class SendBirdAction {
   createGroupChannel(userIds) {
     return new Promise((resolve, reject) => {
       let params = new this.sb.GroupChannelParams();
+
+      console.log(params)
       params.addUserIds(userIds);
       this.sb.GroupChannel.createChannel(params, (groupChannel, error) => {
         error ? reject(error) : resolve(groupChannel);
@@ -314,22 +308,13 @@ class SendBirdAction {
     }
   }
 
-  sendUserMessage({
-    channel,
-    message,
-    handler
-  }) {
+  sendUserMessage({ channel, message, handler }) {
     return channel.sendUserMessage(message, (message, error) => {
       if (handler) handler(message, error);
     });
   }
 
-  sendFileMessage({
-    channel,
-    file,
-    thumbnailSizes,
-    handler
-  }) {
+  sendFileMessage({ channel, file, thumbnailSizes, handler }) {
     const fileMessageParams = new this.sb.FileMessageParams();
     fileMessageParams.file = file;
     fileMessageParams.thumbnailSizes = thumbnailSizes;
@@ -339,10 +324,7 @@ class SendBirdAction {
     });
   }
 
-  deleteMessage({
-    channel,
-    message
-  }) {
+  deleteMessage({ channel, message }) {
     return new Promise((resolve, reject) => {
       if (!this.isCurrentUser(message.sender)) {
         reject({
@@ -360,6 +342,4 @@ class SendBirdAction {
   }
 }
 
-export {
-  SendBirdAction
-};
+export { SendBirdAction };

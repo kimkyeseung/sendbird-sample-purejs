@@ -86,11 +86,11 @@ const updateGroupChannelTime = () => {
 
 document.addEventListener('DOMContentLoaded', () => {
   const { userid, nickname } = getVariableFromUrl();
-  if (isEmpty(userid) || isEmpty(nickname)) {
-    redirectToIndex('UserID and Nickname must be required.');
-  }
+  // if (isEmpty(userid) || isEmpty(nickname)) {
+  //   redirectToIndex('UserID and Nickname must be required.');
+  // }
   sb
-    .connect(userid, nickname)
+    .connect(userid, /* nickname */'')
     .then(user => {
       chatLeft.updateUserInfo(user);
       createConnectionHandler();
